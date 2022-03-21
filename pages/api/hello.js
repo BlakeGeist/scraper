@@ -1,20 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { parse } from "node-html-parser";
-import cheerio from 'cheerio';
+import { parse } from "node-html-parser"
+import cheerio from 'cheerio'
 
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer'
 
 export default async function handler(req, res) {
   const jsonReq = JSON.parse(req.body)
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
 
   await page.setViewport({
     width: 1920,
     height: 1080,
-  });
+  })
 
-  await page.setRequestInterception(true);
+  await page.setRequestInterception(true)
 
   page.once('request', request => {
       var data = {
@@ -23,16 +23,16 @@ export default async function handler(req, res) {
               ...request.headers(),
               'Content-Type': 'application/x-www-form-urlencoded'
           },
-      };
+      }
   
-      request.continue(data);
+      request.continue(data)
   
       // Immediately disable setRequestInterception, or all other requests will hang
-      page.setRequestInterception(false);
-  });
+      page.setRequestInterception(false)
+  })
   
-  await page.goto(jsonReq.url, {waitUntil: 'networkidle2'});
-  const pageRresponse = await page.goto(jsonReq.url);
+  await page.goto(jsonReq.url, {waitUntil: 'networkidle2'})
+  const pageRresponse = await page.goto(jsonReq.url)
   
   await page.evaluate(async () => {
     let scrollPosition = 0
@@ -48,11 +48,11 @@ export default async function handler(req, res) {
     }
   })
 
-  const html = await page.evaluate(() => document.querySelector('*').outerHTML);
+  const html = await page.evaluate(() => document.querySelector('*').outerHTML)
 
   const getElementBy = async (query, content) => {
     try {
-      return await page.$eval(query, (el, content) => el[content], content);
+      return await page.$eval(query, (el, content) => el[content], content)
     }
     catch {
       return ''
@@ -60,20 +60,20 @@ export default async function handler(req, res) {
   }
 
   const schema = () => {
-    const document = parse(html);
-    const structuredData = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
-    const structuredDataJson = structuredData.map((node) => JSON.parse(node.innerHTML)).flat();
+    const document = parse(html)
+    const structuredData = Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
+    const structuredDataJson = structuredData.map((node) => JSON.parse(node.innerHTML)).flat()
     return structuredDataJson
   }
 
   const getParsedMainContent = async () => {
     const mainContent = await getElementBy(".main-content", 'innerHTML')
-    let $ = cheerio.load(mainContent);   
+    let $ = cheerio.load(mainContent)   
     $('*').each(function() {      // iterate over all elements
-        this.attribs = {};     // remove all attributes
-    });
+        this.attribs = {}     // remove all attributes
+    })
     $('*').remove('iframe')
-    return $.html($('body'));
+    return $.html($('body'))
   }
 
   const images = await page.$$eval("img", el => el.map(img => {
@@ -164,7 +164,7 @@ export default async function handler(req, res) {
     parsedMainContent: await getParsedMainContent()
   }
 
-  await browser.close();
+  await browser.close()
   res.status(200).json({ data: data })
 
 

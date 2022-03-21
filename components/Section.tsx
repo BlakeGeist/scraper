@@ -1,6 +1,6 @@
-import React, { useState, FC } from 'react';
-import CircularProgressWithLabel from 'components/CircularProgressWithLabel';
-import styled from 'styled-components';
+import React, { useState, FC } from 'react'
+import CircularProgressWithLabel from 'components/CircularProgressWithLabel'
+import styled from 'styled-components'
 
 const Header = styled.div`
     display: flex;
@@ -9,11 +9,11 @@ const Header = styled.div`
     h2 {
         margin: 0 15px 0 0;
     }
-`;
+`
 
 const StyledButton = styled.button`
     margin-top: 10px;
-`;
+`
 
 const Heading = styled.h2`
     display: flex;
@@ -26,7 +26,7 @@ const Heading = styled.h2`
         font-size: 16px;
         cursor: pointer;
     }
-`;
+`
 
 interface SectionProps {
     heading: string;
@@ -35,10 +35,10 @@ interface SectionProps {
 }
 
 const Section:FC<SectionProps> = ({ heading, children, score = 0 }) => {
-    const [isOpen, seIsOpen] = useState(false);
+    const [isOpen, seIsOpen] = useState(false)
 
     const toggleIsOpen = () => {
-        seIsOpen(!isOpen);
+        seIsOpen(!isOpen)
     }
     return (
         <section>
@@ -59,4 +59,4 @@ const Section:FC<SectionProps> = ({ heading, children, score = 0 }) => {
     )
 }
 
-export default Section;
+export default Section

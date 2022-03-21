@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
-import styled from 'styled-components';
-import cheerio from 'cheerio';
+import styled from 'styled-components'
+import cheerio from 'cheerio'
 import HomePage from 'components/pages/Home'
-import Link from 'next/link';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import { LoadingButton } from '@mui/lab';
+import Link from 'next/link'
+import CircularProgress from '@mui/material/CircularProgress'
+import Box from '@mui/material/Box'
+import { LoadingButton } from '@mui/lab'
 
 const Main = styled.main`
   max-width: 1280px;
   margin: 0 auto;
   padding: 15px;  
-`;
+`
 
 const Form = styled.form`
   max-width: 100%;
@@ -28,35 +28,35 @@ const Form = styled.form`
     height: 36px;
     border-radius: 5px;
   }
-`;
+`
 
 const Input = styled.input`
   margin: 0 5px;
   flex: 1;
-`;
+`
 
 function Home({ companies }) {
 
-  const [pageInfo, setPageInfo] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [pageInfo, setPageInfo] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
 
   const getURLInfo = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     setIsLoading(true)
-    const url = e.currentTarget.url.value;
+    const url = e.currentTarget.url.value
     const response = await fetch("/api/hello", {
       method: 'POST',
       body: JSON.stringify({url: url}),
-    });
-    const result = await response.json();
+    })
+    const result = await response.json()
 
     setPageInfo(result.data)
 
     const response2 = await fetch("/api/status", {
       method: 'POST',
       body: JSON.stringify({links: result.data.links}),
-    });
+    })
 
     result.data.links = await response2.json()
 
@@ -65,12 +65,12 @@ function Home({ companies }) {
     const lh =  await fetch("/api/lighthouse", {
       method: 'POST',
       body: JSON.stringify({url: url}),
-    });
+    })
 
-    result.data.lh = await lh.json();
+    result.data.lh = await lh.json()
 
     setPageInfo(result.data)
-    setIsLoading(false);
+    setIsLoading(false)
   }
 
   console.log(pageInfo)
@@ -107,5 +107,5 @@ function Home({ companies }) {
   )
 }
 
-export default Home;
+export default Home
 

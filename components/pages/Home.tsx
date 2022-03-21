@@ -1,10 +1,9 @@
 import React, { FC } from 'react'
 import Layout from '../Layout'
-import getDividends from 'utils/getDividinds';
-import CircularProgressWithLabel from 'components/CircularProgressWithLabel';
-import Section from 'components/Section';
-import {JsonTable} from 'react-json-to-html';
-import styled from 'styled-components';
+import CircularProgressWithLabel from 'components/CircularProgressWithLabel'
+import Section from 'components/Section'
+import {JsonTable} from 'react-json-to-html'
+import styled from 'styled-components'
 
 interface image {
   alt: string;
@@ -19,23 +18,29 @@ interface link {
 }
 
 interface pageInfoProps {
-  pageInfo: {
-    meta: any,
-    urlInfo: any,
-    url: string,
-    articleDate: string,
-    images: [image],
-    title: string,
-    description: string,
-    canonical: string,
-    ampUrl: string,
-    robots: string,
-    h1: [string],
-    h2: [string],
-    h3: [string],
-    h4: [string],
-    httpStatus: string,
-    og: {
+  pageInfo?: {
+    meta?: any,
+    urlInfo?: any,
+    url?: string,
+    articleDate?: {
+      score: string,
+      data: any
+    },
+    images?: {
+      data: [image],
+      score: string
+    },
+    title?: string,
+    description?: string,
+    canonical?: string,
+    ampUrl?: string,
+    robots?: string,
+    h1?: [string],
+    h2?: [string],
+    h3?: [string],
+    h4?: [string],
+    httpStatus?: string,
+    og?: {
       title: string,
       siteName: string,
       description: string,
@@ -43,7 +48,7 @@ interface pageInfoProps {
       image: string,
       url: string,
     },
-    twitter: {
+    twitter?: {
       card: string,
       site: string,
       siteId: string,
@@ -54,13 +59,17 @@ interface pageInfoProps {
       image: string,
       imageAlt: string,
     },    
-    headers: any,
+    headers?: any,
     //html,
-    schema: any,
-    links: [link],
-    articleText: string,
-    mainContent: string,
-    parsedMainContent: string    
+    schema?: any,
+    links?: {
+      score: string,
+      data: [link]
+    },
+    articleText?: string,
+    mainContent?: string,
+    parsedMainContent?: string,
+    lh?: any
   }
 }
 
@@ -68,36 +77,31 @@ const OverallScores = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+`
 
 const OverallScoresScore = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 25px;
-`;
+`
 
 const LhScores = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+`
 
 const LhScoresScore = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 25px;
-`;
+`
 
 const Home:FC<pageInfoProps> = ({ pageInfo }) => {
-  const onSubmit = async (e) => {
-    e.preventDefault()
-    const info = await getDividends(e.currentTarget.symbol.value)
-    console.log(info);
-  }
 
-  const average = (array) => array.reduce((a, b) => a + b) / array.length;
+  const average = (array) => array.reduce((a, b) => a + b) / array.length
   const overallScore = average([
     pageInfo.urlInfo.score,
     pageInfo.meta.score,
